@@ -146,7 +146,52 @@
     width: 60px;
     flex: 0 0 auto;
   }
+  .acoes select {
+    flex: 1 1 100px;
+  }
   .acoes button { flex: 1 1 auto; }
+  select {
+    background: #2a2a30;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+  }
+  .secao-resistencias {
+    flex: 1 1 100%;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: #26262c;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .grupo-tipos {
+    flex: 1 1 140px;
+  }
+  .grupo-tipos strong {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    color: #aaa;
+  }
+  .checkbox-tipo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  .checkbox-tipo input {
+    width: auto;
+    padding: 0;
+  }
+  .info-tipos {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 4px;
+  }
   .vazio {
     color: #777;
     text-align: center;
@@ -195,6 +240,17 @@
   <form id="form-adicionar">
     <input id="input-nome" type="text" placeholder="Nome" required>
     <input id="input-hp" type="number" placeholder="HP máximo" required>
+    <button type="button" class="btn-remover" id="btn-toggle-resistencias">Resistências/Imunidades</button>
+    <div class="secao-resistencias" id="secao-resistencias" style="display:none">
+      <div class="grupo-tipos">
+        <strong>Resistência</strong>
+        <div id="checkboxes-resistencias"></div>
+      </div>
+      <div class="grupo-tipos">
+        <strong>Imunidade</strong>
+        <div id="checkboxes-imunidades"></div>
+      </div>
+    </div>
     <button type="submit" class="btn-add">Adicionar</button>
   </form>
 
@@ -207,6 +263,33 @@
 <script>
 const params = new URLSearchParams(location.search);
 const idEncontro = params.get("id");
+
+const TIPOS_DANO = [
+  { chave: "acido", label: "Ácido" },
+  { chave: "contundente", label: "Contundente" },
+  { chave: "cortante", label: "Cortante" },
+  { chave: "perfurante", label: "Perfurante" },
+  { chave: "fogo", label: "Fogo" },
+  { chave: "frio", label: "Frio" },
+  { chave: "forca", label: "Força" },
+  { chave: "necrotico", label: "Necrótico" },
+  { chave: "veneno", label: "Veneno" },
+  { chave: "psiquico", label: "Psíquico" },
+  { chave: "radiante", label: "Radiante" },
+  { chave: "relampago", label: "Relâmpago" },
+  { chave: "trovao", label: "Trovão" },
+];
+
+function labelTipoDano(chave) {
+  return TIPOS_DANO.find((t) => t.chave === chave)?.label || chave;
+}
+
+function calcularDano(criatura, valor, tipo) {
+  if (!tipo) return valor;
+  if ((criatura.imunidades || []).includes(tipo)) return 0;
+  if ((criatura.resistencias || []).includes(tipo)) return Math.floor(valor / 2);
+  return valor;
+}
 
 if (idEncontro) {
   document.getElementById("tela-lista").style.display = "none";
@@ -334,6 +417,28 @@ async function iniciarTelaCombate(id) {
     return [...estado.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
   }
 
+  function criarCheckboxesTipos(containerId) {
+    const container = document.getElementById(containerId);
+    for (const tipo of TIPOS_DANO) {
+      const label = document.createElement("label");
+      label.className = "checkbox-tipo";
+      label.innerHTML = `<input type="checkbox" value="${tipo.chave}"> ${tipo.label}`;
+      container.appendChild(label);
+    }
+  }
+
+  function tiposMarcados(containerId) {
+    return [...document.querySelectorAll(`#${containerId} input:checked`)].map((i) => i.value);
+  }
+
+  criarCheckboxesTipos("checkboxes-resistencias");
+  criarCheckboxesTipos("checkboxes-imunidades");
+
+  document.getElementById("btn-toggle-resistencias").addEventListener("click", () => {
+    const secao = document.getElementById("secao-resistencias");
+    secao.style.display = secao.style.display === "none" ? "flex" : "none";
+  });
+
   function criarCriaturaApartirDeJogador(jogador) {
     return {
       id: Date.now() + Math.random(),
@@ -410,7 +515,16 @@ async function iniciarTelaCombate(id) {
           ${ehProxima ? '<span class="tag-proxima">Próxima</span>' : ""}
         </div>
         <div class="hp">HP: ${criatura.hp} / ${criatura.hpMaximo}</div>
+        ${criatura.resistencias?.length || criatura.imunidades?.length ? `
+        <div class="info-tipos">
+          ${criatura.resistencias?.length ? `Resistência: ${criatura.resistencias.map(labelTipoDano).join(", ")}` : ""}
+          ${criatura.imunidades?.length ? `Imunidade: ${criatura.imunidades.map(labelTipoDano).join(", ")}` : ""}
+        </div>` : ""}
         <div class="acoes">
+          <select class="select-tipo-dano">
+            <option value="">Sem tipo</option>
+            ${TIPOS_DANO.map((t) => `<option value="${t.chave}">${t.label}</option>`).join("")}
+          </select>
           <input type="number" class="input-valor" placeholder="0" min="0">
           <button class="btn-dano">Dano</button>
           <button class="btn-cura">Cura</button>
@@ -422,7 +536,8 @@ async function iniciarTelaCombate(id) {
 
       item.querySelector(".btn-dano").addEventListener("click", () => {
         const valor = Number(inputValor.value) || 0;
-        criatura.hp = Math.max(0, criatura.hp - valor);
+        const tipo = item.querySelector(".select-tipo-dano").value;
+        criatura.hp = Math.max(0, criatura.hp - calcularDano(criatura, valor, tipo));
         inputValor.value = "";
         salvarEstado();
       });
@@ -456,6 +571,8 @@ async function iniciarTelaCombate(id) {
       iniciativa: 0,
       hpMaximo,
       hp: hpMaximo,
+      resistencias: tiposMarcados("checkboxes-resistencias"),
+      imunidades: tiposMarcados("checkboxes-imunidades"),
     };
 
     await buscarEstado();
@@ -465,6 +582,8 @@ async function iniciarTelaCombate(id) {
 
     nomeInput.value = "";
     hpInput.value = "";
+    document.querySelectorAll("#secao-resistencias input:checked").forEach((i) => (i.checked = false));
+    document.getElementById("secao-resistencias").style.display = "none";
     nomeInput.focus();
 
     salvarEstado();
