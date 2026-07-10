@@ -1,0 +1,7 @@
+{
+  "name": "encontros-rpg",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}
