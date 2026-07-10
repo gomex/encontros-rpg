@@ -397,6 +397,7 @@ async function iniciarTelaCombate(id) {
       const ehAtual = criatura.id === estado.turnoAtualId;
       const ehProxima = !ehAtual && criaturaProxima && criatura.id === criaturaProxima.id;
       const item = document.createElement("li");
+      item.dataset.id = criatura.id;
       item.className = [
         ehAtual ? "turno-atual" : "",
         ehProxima ? "proximo-turno" : "",
@@ -486,9 +487,21 @@ async function iniciarTelaCombate(id) {
   carregarJogadoresParaEncontro();
 
   setInterval(async () => {
-    const editando = document.activeElement && document.activeElement.closest("#lista");
-    if (editando) return;
-    if (await buscarEstado()) renderizar();
+    const elementoFocado = document.activeElement;
+    const editandoValor = elementoFocado && elementoFocado.classList.contains("input-valor")
+      ? { id: elementoFocado.closest("li").dataset.id, valor: elementoFocado.value }
+      : null;
+
+    if (!(await buscarEstado())) return;
+    renderizar();
+
+    if (editandoValor) {
+      const inputRestaurado = document.querySelector(`li[data-id="${editandoValor.id}"] .input-valor`);
+      if (inputRestaurado) {
+        inputRestaurado.value = editandoValor.valor;
+        inputRestaurado.focus();
+      }
+    }
   }, 2000);
 }
 </script>
