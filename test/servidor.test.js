@@ -110,6 +110,30 @@ test("apaga todos os encontros", async () => {
   assert.deepEqual(lista, []);
 });
 
+test("POST /api/encontros com JSON invalido retorna erro claro", async () => {
+  const resposta = await fetch(`${BASE_URL}/api/encontros`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{invalido",
+  });
+
+  assert.equal(resposta.status, 400);
+  const corpo = await resposta.json();
+  assert.ok(corpo.erro);
+});
+
+test("POST /api/jogadores com JSON invalido retorna erro claro", async () => {
+  const resposta = await fetch(`${BASE_URL}/api/jogadores`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{invalido",
+  });
+
+  assert.equal(resposta.status, 400);
+  const corpo = await resposta.json();
+  assert.ok(corpo.erro);
+});
+
 test("cadastra, lista e remove jogadores", async () => {
   const jogador = await fetch(`${BASE_URL}/api/jogadores`, {
     method: "POST",

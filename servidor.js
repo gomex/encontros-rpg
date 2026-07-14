@@ -10,7 +10,11 @@ const ARQUIVO_JOGADORES = path.join(__dirname, "jogadores.json");
 
 function carregarJson(caminho) {
   if (!fs.existsSync(caminho)) return {};
-  return JSON.parse(fs.readFileSync(caminho, "utf8"));
+  try {
+    return JSON.parse(fs.readFileSync(caminho, "utf8"));
+  } catch (erro) {
+    throw new Error(`Arquivo "${caminho}" contém JSON inválido: ${erro.message}`);
+  }
 }
 
 function salvarEncontros() {
@@ -60,6 +64,18 @@ function enviarJson(res, dados, status = 200) {
 }
 
 const servidor = http.createServer(async (req, res) => {
+  try {
+    await tratarRequisicao(req, res);
+  } catch (erro) {
+    console.error("Erro ao processar requisição:", erro);
+    if (erro instanceof SyntaxError) {
+      return enviarJson(res, { erro: "JSON inválido" }, 400);
+    }
+    return enviarJson(res, { erro: "Erro interno do servidor" }, 500);
+  }
+});
+
+async function tratarRequisicao(req, res) {
   const url = new URL(req.url, "http://localhost");
   const partes = url.pathname.split("/").filter(Boolean);
 
@@ -123,13 +139,9 @@ const servidor = http.createServer(async (req, res) => {
     if (req.method === "POST") {
       if (!encontros[id]) return enviarJson(res, { erro: "Encontro não encontrado" }, 404);
       const corpo = await lerCorpo(req);
-      try {
-        encontros[id] = JSON.parse(corpo);
-        salvarEncontros();
-        return enviarJson(res, encontros[id]);
-      } catch (erro) {
-        return enviarJson(res, { erro: "JSON inválido" }, 400);
-      }
+      encontros[id] = JSON.parse(corpo);
+      salvarEncontros();
+      return enviarJson(res, encontros[id]);
     }
 
     if (req.method === "DELETE") {
@@ -142,7 +154,7 @@ const servidor = http.createServer(async (req, res) => {
 
   res.writeHead(404);
   res.end("Não encontrado");
-});
+}
 
 function listarIpsLocais() {
   const interfaces = os.networkInterfaces();
