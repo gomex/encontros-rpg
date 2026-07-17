@@ -1,514 +1,636 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Mestre — HP & Iniciativa</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, system-ui, sans-serif;
-    background: #1b1b1f;
-    color: #f0f0f0;
-    padding: 12px;
-    padding-bottom: 80px;
-  }
-  h1 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
-  }
-  a { color: #6ea0ff; }
-  .rodada {
-    font-size: 0.95rem;
-    color: #aaa;
-    margin-bottom: 12px;
-  }
-  .voltar {
-    display: inline-block;
-    margin-bottom: 12px;
-  }
-  .link-jogador {
-    font-size: 0.85rem;
-    color: #aaa;
-    margin-bottom: 16px;
-  }
-  .link-jogador input {
-    width: 100%;
-    margin-top: 4px;
-  }
-  form {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  form input {
-    flex: 1 1 80px;
-    min-width: 0;
-  }
-  input {
-    background: #2a2a30;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1rem;
-  }
-  button {
-    border: none;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  .btn-add { background: #3a6df0; color: #fff; }
-  .btn-dano { background: #b3413d; color: #fff; }
-  .btn-cura { background: #3d9c56; color: #fff; }
-  .btn-remover { background: #444; color: #ddd; }
-  .btn-apagar-tudo { background: #b3413d; color: #fff; margin-top: 16px; }
-  .btn-proximo {
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    background: #3a6df0;
-    color: #fff;
-    padding: 14px;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  ul { list-style: none; margin: 0; padding: 0; }
-  li {
-    background: #26262c;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  li.turno-atual {
-    border-color: #f0c34a;
-    background: #33302066;
-  }
-  li.proximo-turno {
-    border-style: dashed;
-    border-color: #6ea0ff;
-  }
-  .tag-proxima {
-    color: #6ea0ff;
-    font-size: 0.8rem;
-    margin-left: 8px;
-  }
-  #lista-encontros li, #lista-jogadores li, #lista-jogadores-encontro li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-  #lista-encontros a { font-weight: bold; }
-  h2 {
-    font-size: 1.05rem;
-    margin: 24px 0 8px;
-  }
-  .linha-topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-  }
-  .nome {
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-  .info {
-    font-size: 0.85rem;
-    color: #aaa;
-  }
-  .hp {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  .morta {
-    color: #e05a5a;
-    font-size: 0.8rem;
-    margin-left: 8px;
-  }
-  li.morta .nome {
-    text-decoration: line-through;
-    opacity: 0.6;
-  }
-  .acoes {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .acoes input {
-    width: 60px;
-    flex: 0 0 auto;
-  }
-  .acoes select {
-    flex: 1 1 100px;
-  }
-  .acoes button { flex: 1 1 auto; }
-  select {
-    background: #2a2a30;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1rem;
-  }
-  .secao-resistencias {
-    flex: 1 1 100%;
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    background: #26262c;
-    border-radius: 10px;
-    padding: 10px;
-  }
-  .grupo-tipos {
-    flex: 1 1 140px;
-  }
-  .grupo-tipos strong {
-    display: block;
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-    color: #aaa;
-  }
-  .checkbox-tipo {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-  }
-  .checkbox-tipo input {
-    width: auto;
-    padding: 0;
-  }
-  .info-tipos {
-    font-size: 0.8rem;
-    color: #aaa;
-    margin-top: 4px;
-  }
-  .vazio {
-    color: #777;
-    text-align: center;
-    margin-top: 24px;
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Mestre — HP & Iniciativa</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, system-ui, sans-serif;
+      background: #1b1b1f;
+      color: #f0f0f0;
+      padding: 12px;
+      padding-bottom: 80px;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 4px;
+    }
+
+    a {
+      color: #6ea0ff;
+    }
+
+    .rodada {
+      font-size: 0.95rem;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    .voltar {
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .link-jogador {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    .link-jogador .link-row {
+      width: 100%;
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .link-jogador input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-copiar {
+      background: #3a6df0;
+      color: #fff;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-copiar.copiado {
+      background: #3d9c56;
+    }
+
+    form {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    form input {
+      flex: 1 1 80px;
+      min-width: 0;
+    }
+
+    form input[type="checkbox"] {
+      flex: 0 0 auto;
+      width: auto;
+      margin: 0;
+    }
+
+    input {
+      background: #2a2a30;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      background: #3a6df0;
+      color: #fff;
+    }
+
+    .btn-dano {
+      background: #b3413d;
+      color: #fff;
+    }
+
+    .btn-cura {
+      background: #3d9c56;
+      color: #fff;
+    }
+
+    .btn-remover {
+      background: #444;
+      color: #ddd;
+    }
+
+    .btn-apagar-tudo {
+      background: #b3413d;
+      color: #fff;
+      margin-top: 16px;
+    }
+
+    .btn-proximo {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: #3a6df0;
+      color: #fff;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      background: #26262c;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    li.turno-atual {
+      border-color: #f0c34a;
+      background: #33302066;
+    }
+
+    li.proximo-turno {
+      border-style: dashed;
+      border-color: #6ea0ff;
+    }
+
+    .tag-proxima {
+      color: #6ea0ff;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    #lista-encontros li,
+    #lista-jogadores li,
+    #lista-jogadores-encontro li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #lista-encontros a {
+      font-weight: bold;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      margin: 24px 0 8px;
+    }
+
+    .linha-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .nome {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .info {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .hp {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .morta {
+      color: #e05a5a;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    li.morta .nome {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .acoes {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .acoes input {
+      width: 60px;
+      flex: 0 0 auto;
+    }
+
+    .acoes select {
+      flex: 1 1 100px;
+    }
+
+    .acoes button {
+      flex: 1 1 auto;
+    }
+
+    select {
+      background: #2a2a30;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    .secao-resistencias {
+      flex: 1 1 100%;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: #26262c;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .grupo-tipos {
+      flex: 1 1 140px;
+    }
+
+    .grupo-tipos strong {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #aaa;
+    }
+
+    .checkbox-tipo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .checkbox-tipo input {
+      width: auto;
+      padding: 0;
+    }
+
+    .info-tipos {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    .vazio {
+      color: #777;
+      text-align: center;
+      margin-top: 24px;
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="tela-lista">
-  <h1>Encontros</h1>
-  <form id="form-criar-encontro">
-    <input id="input-nome-encontro" type="text" placeholder="Nome do encontro" required>
-    <button type="submit" class="btn-add">Criar</button>
-  </form>
-  <ul id="lista-encontros"></ul>
-  <div class="vazio" id="vazio-encontros" style="display:none">Nenhum encontro criado ainda.</div>
-  <button class="btn-apagar-tudo" id="btn-apagar-tudo">Apagar todos os encontros</button>
+  <div id="tela-lista">
+    <h1>Encontros</h1>
+    <form id="form-criar-encontro">
+      <input id="input-nome-encontro" type="text" placeholder="Nome do encontro" required>
+      <button type="submit" class="btn-add">Criar</button>
+    </form>
+    <ul id="lista-encontros"></ul>
+    <div class="vazio" id="vazio-encontros" style="display:none">Nenhum encontro criado ainda.</div>
+    <button class="btn-apagar-tudo" id="btn-apagar-tudo">Apagar todos os encontros</button>
 
-  <h2>Jogadores</h2>
-  <form id="form-criar-jogador">
-    <input id="input-nome-jogador" type="text" placeholder="Nome" required>
-    <input id="input-hp-jogador" type="number" placeholder="HP máximo" required>
-    <button type="submit" class="btn-add">Adicionar</button>
-  </form>
-  <ul id="lista-jogadores"></ul>
-  <div class="vazio" id="vazio-jogadores" style="display:none">Nenhum jogador cadastrado ainda.</div>
-</div>
-
-<div id="tela-combate" style="display:none">
-  <a class="voltar" href="/mestre">&larr; Encontros</a>
-  <h1 id="titulo-encontro">Mestre</h1>
-  <div class="link-jogador">
-    Link para jogadores:
-    <input id="input-link-jogador" type="text" readonly onclick="this.select()">
-  </div>
-  <div class="rodada">Rodada <span id="rodada">1</span></div>
-
-  <div id="secao-jogadores-cadastrados">
-    <h2>Jogadores cadastrados</h2>
-    <ul id="lista-jogadores-encontro"></ul>
-    <div class="vazio" id="vazio-jogadores-encontro" style="display:none">Nenhum jogador cadastrado. Cadastre em "Encontros".</div>
-    <button class="btn-add" id="btn-adicionar-todos-jogadores">Adicionar todos ao encontro</button>
+    <h2>Jogadores</h2>
+    <form id="form-criar-jogador">
+      <input id="input-nome-jogador" type="text" placeholder="Nome" required>
+      <input id="input-hp-jogador" type="number" placeholder="HP máximo" min="1" required>
+      <button type="submit" class="btn-add">Adicionar</button>
+    </form>
+    <ul id="lista-jogadores"></ul>
+    <div class="vazio" id="vazio-jogadores" style="display:none">Nenhum jogador cadastrado ainda.</div>
   </div>
 
-  <form id="form-adicionar">
-    <input id="input-nome" type="text" placeholder="Nome" required>
-    <input id="input-hp" type="number" placeholder="HP máximo" required>
-    <button type="button" class="btn-remover" id="btn-toggle-resistencias">Resistências/Imunidades</button>
-    <div class="secao-resistencias" id="secao-resistencias" style="display:none">
-      <div class="grupo-tipos">
-        <strong>Resistência</strong>
-        <div id="checkboxes-resistencias"></div>
-      </div>
-      <div class="grupo-tipos">
-        <strong>Imunidade</strong>
-        <div id="checkboxes-imunidades"></div>
+  <div id="tela-combate" style="display:none">
+    <a class="voltar" href="/mestre">&larr; Encontros</a>
+    <h1 id="titulo-encontro">Mestre</h1>
+    <div class="link-jogador">
+      Link para jogadores:
+      <div class="link-row">
+        <input id="input-link-jogador" type="text" readonly onclick="this.select()">
+        <button class="btn-copiar" id="btn-copiar-link">Copiar</button>
       </div>
     </div>
-    <button type="submit" class="btn-add">Adicionar</button>
-  </form>
+    <div class="rodada">Rodada <span id="rodada">1</span></div>
 
-  <ul id="lista"></ul>
-  <div class="vazio" id="vazio" style="display:none">Nenhuma criatura ainda.</div>
+    <div id="secao-jogadores-cadastrados">
+      <h2>Jogadores cadastrados</h2>
+      <ul id="lista-jogadores-encontro"></ul>
+      <div class="vazio" id="vazio-jogadores-encontro" style="display:none">Nenhum jogador cadastrado. Cadastre em
+        "Encontros".</div>
+      <button class="btn-add" id="btn-adicionar-todos-jogadores">Adicionar todos ao encontro</button>
+    </div>
 
-  <button class="btn-proximo" id="btn-proximo">Próximo turno &rarr;</button>
-</div>
+    <form id="form-adicionar">
+      <input id="input-nome" type="text" placeholder="Nome" required>
+      <input id="input-hp" type="number" placeholder="HP máximo" min="0" required>
+      <button type="button" class="btn-remover" id="btn-toggle-resistencias">Resistências/Imunidades</button>
+      <div class="secao-resistencias" id="secao-resistencias" style="display:none">
+        <div class="grupo-tipos">
+          <strong>Resistência</strong>
+          <div id="checkboxes-resistencias"></div>
+        </div>
+        <div class="grupo-tipos">
+          <strong>Imunidade</strong>
+          <div id="checkboxes-imunidades"></div>
+        </div>
+      </div>
+      <label style="font-size: 0.9rem; display: flex; align-items: center; gap: 6px; width: 100%; margin: 8px 0;">
+        <input type="checkbox" id="checkbox-salvar-global" style="width: auto;"> Salvar na lista global
+        (Jogadores/Monstros)
+      </label>
+      <button type="submit" class="btn-add">Adicionar</button>
+    </form>
 
-<script>
-const params = new URLSearchParams(location.search);
-const idEncontro = params.get("id");
+    <ul id="lista"></ul>
+    <div class="vazio" id="vazio" style="display:none">Nenhuma criatura ainda.</div>
 
-const TIPOS_DANO = [
-  { chave: "acido", label: "Ácido" },
-  { chave: "contundente", label: "Contundente" },
-  { chave: "cortante", label: "Cortante" },
-  { chave: "perfurante", label: "Perfurante" },
-  { chave: "fogo", label: "Fogo" },
-  { chave: "frio", label: "Frio" },
-  { chave: "forca", label: "Força" },
-  { chave: "necrotico", label: "Necrótico" },
-  { chave: "veneno", label: "Veneno" },
-  { chave: "psiquico", label: "Psíquico" },
-  { chave: "radiante", label: "Radiante" },
-  { chave: "relampago", label: "Relâmpago" },
-  { chave: "trovao", label: "Trovão" },
-];
+    <button class="btn-proximo" id="btn-proximo">Próximo turno &rarr;</button>
+  </div>
 
-function labelTipoDano(chave) {
-  return TIPOS_DANO.find((t) => t.chave === chave)?.label || chave;
-}
+  <script>
+    const params = new URLSearchParams(location.search);
+    const idEncontro = params.get("id");
 
-function calcularDano(criatura, valor, tipo) {
-  if (!tipo) return valor;
-  if ((criatura.imunidades || []).includes(tipo)) return 0;
-  if ((criatura.resistencias || []).includes(tipo)) return Math.floor(valor / 2);
-  return valor;
-}
+    const TIPOS_DANO = [
+      { chave: "acido", label: "Ácido" },
+      { chave: "contundente", label: "Contundente" },
+      { chave: "cortante", label: "Cortante" },
+      { chave: "perfurante", label: "Perfurante" },
+      { chave: "fogo", label: "Fogo" },
+      { chave: "frio", label: "Frio" },
+      { chave: "forca", label: "Força" },
+      { chave: "necrotico", label: "Necrótico" },
+      { chave: "veneno", label: "Veneno" },
+      { chave: "psiquico", label: "Psíquico" },
+      { chave: "radiante", label: "Radiante" },
+      { chave: "relampago", label: "Relâmpago" },
+      { chave: "trovao", label: "Trovão" },
+    ];
 
-if (idEncontro) {
-  document.getElementById("tela-lista").style.display = "none";
-  iniciarTelaCombate(idEncontro);
-} else {
-  iniciarTelaLista();
-}
+    function labelTipoDano(chave) {
+      return TIPOS_DANO.find((t) => t.chave === chave)?.label || chave;
+    }
 
-async function carregarListaEncontros() {
-  const resposta = await fetch("/api/encontros");
-  const encontros = await resposta.json();
+    function calcularDano(criatura, valor, tipo) {
+      if (!tipo) return valor;
+      if ((criatura.imunidades || []).includes(tipo)) return 0;
+      if ((criatura.resistencias || []).includes(tipo)) return Math.floor(valor / 2);
+      return valor;
+    }
 
-  const lista = document.getElementById("lista-encontros");
-  const vazio = document.getElementById("vazio-encontros");
-  lista.innerHTML = "";
-  vazio.style.display = encontros.length === 0 ? "block" : "none";
+    if (idEncontro) {
+      document.getElementById("tela-lista").style.display = "none";
+      iniciarTelaCombate(idEncontro);
+    } else {
+      iniciarTelaLista();
+    }
 
-  for (const encontro of encontros) {
-    const item = document.createElement("li");
-    item.innerHTML = `
+    async function carregarListaEncontros() {
+      const resposta = await fetch("/api/encontros");
+      const encontros = await resposta.json();
+
+      const lista = document.getElementById("lista-encontros");
+      const vazio = document.getElementById("vazio-encontros");
+      lista.innerHTML = "";
+      vazio.style.display = encontros.length === 0 ? "block" : "none";
+
+      for (const encontro of encontros) {
+        const item = document.createElement("li");
+        item.innerHTML = `
       <a href="/mestre?id=${encontro.id}">${encontro.nome}</a>
       <button class="btn-remover">Remover</button>
     `;
-    item.querySelector(".btn-remover").addEventListener("click", async () => {
-      if (!confirm(`Apagar o encontro "${encontro.nome}"?`)) return;
-      await fetch(`/api/encontros/${encontro.id}`, { method: "DELETE" });
-      carregarListaEncontros();
-    });
-    lista.appendChild(item);
-  }
-}
+        item.querySelector(".btn-remover").addEventListener("click", async () => {
+          if (!confirm(`Apagar o encontro "${encontro.nome}"?`)) return;
+          await fetch(`/api/encontros/${encontro.id}`, { method: "DELETE" });
+          carregarListaEncontros();
+        });
+        lista.appendChild(item);
+      }
+    }
 
-async function carregarListaJogadores() {
-  const resposta = await fetch("/api/jogadores");
-  const jogadores = await resposta.json();
+    async function carregarListaJogadores() {
+      const resposta = await fetch("/api/jogadores");
+      const jogadores = await resposta.json();
 
-  const lista = document.getElementById("lista-jogadores");
-  const vazio = document.getElementById("vazio-jogadores");
-  lista.innerHTML = "";
-  vazio.style.display = jogadores.length === 0 ? "block" : "none";
+      const lista = document.getElementById("lista-jogadores");
+      const vazio = document.getElementById("vazio-jogadores");
+      lista.innerHTML = "";
+      vazio.style.display = jogadores.length === 0 ? "block" : "none";
 
-  for (const jogador of jogadores) {
-    const item = document.createElement("li");
-    item.innerHTML = `
+      for (const jogador of jogadores) {
+        const item = document.createElement("li");
+        item.innerHTML = `
       <span>${jogador.nome} (HP ${jogador.hpMaximo})</span>
       <button class="btn-remover">Remover</button>
     `;
-    item.querySelector(".btn-remover").addEventListener("click", async () => {
-      if (!confirm(`Remover o jogador "${jogador.nome}"?`)) return;
-      await fetch(`/api/jogadores/${jogador.id}`, { method: "DELETE" });
+        item.querySelector(".btn-remover").addEventListener("click", async () => {
+          if (!confirm(`Remover o jogador "${jogador.nome}"?`)) return;
+          await fetch(`/api/jogadores/${jogador.id}`, { method: "DELETE" });
+          carregarListaJogadores();
+        });
+        lista.appendChild(item);
+      }
+    }
+
+    function iniciarTelaLista() {
+      carregarListaEncontros();
       carregarListaJogadores();
-    });
-    lista.appendChild(item);
-  }
-}
 
-function iniciarTelaLista() {
-  carregarListaEncontros();
-  carregarListaJogadores();
+      document.getElementById("form-criar-encontro").addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const nomeInput = document.getElementById("input-nome-encontro");
+        const resposta = await fetch("/api/encontros", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: nomeInput.value.trim() }),
+        });
+        const novoEncontro = await resposta.json();
+        location.href = `/mestre?id=${novoEncontro.id}`;
+      });
 
-  document.getElementById("form-criar-encontro").addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    const nomeInput = document.getElementById("input-nome-encontro");
-    const resposta = await fetch("/api/encontros", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: nomeInput.value.trim() }),
-    });
-    const novoEncontro = await resposta.json();
-    location.href = `/mestre?id=${novoEncontro.id}`;
-  });
+      document.getElementById("btn-apagar-tudo").addEventListener("click", async () => {
+        if (!confirm("Apagar TODOS os encontros? Essa ação não pode ser desfeita.")) return;
+        await fetch("/api/encontros", { method: "DELETE" });
+        carregarListaEncontros();
+      });
 
-  document.getElementById("btn-apagar-tudo").addEventListener("click", async () => {
-    if (!confirm("Apagar TODOS os encontros? Essa ação não pode ser desfeita.")) return;
-    await fetch("/api/encontros", { method: "DELETE" });
-    carregarListaEncontros();
-  });
-
-  document.getElementById("form-criar-jogador").addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    const nomeInput = document.getElementById("input-nome-jogador");
-    const hpInput = document.getElementById("input-hp-jogador");
-    await fetch("/api/jogadores", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: nomeInput.value.trim(), hpMaximo: Number(hpInput.value) }),
-    });
-    nomeInput.value = "";
-    hpInput.value = "";
-    nomeInput.focus();
-    carregarListaJogadores();
-  });
-}
-
-async function iniciarTelaCombate(id) {
-  let estado;
-
-  async function buscarEstado() {
-    const resposta = await fetch(`/api/encontros/${id}`);
-    if (resposta.status === 404) {
-      document.body.innerHTML = `<p>Encontro não encontrado. <a href="/mestre">Voltar</a></p>`;
-      return false;
+      document.getElementById("form-criar-jogador").addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const nomeInput = document.getElementById("input-nome-jogador");
+        const hpInput = document.getElementById("input-hp-jogador");
+        await fetch("/api/jogadores", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: nomeInput.value.trim(), hpMaximo: Number(hpInput.value) }),
+        });
+        nomeInput.value = "";
+        hpInput.value = "";
+        nomeInput.focus();
+        carregarListaJogadores();
+      });
     }
-    estado = await resposta.json();
-    return true;
-  }
 
-  if (!(await buscarEstado())) return;
+    async function iniciarTelaCombate(id) {
+      let estado;
 
-  document.getElementById("tela-combate").style.display = "block";
-  document.getElementById("titulo-encontro").textContent = estado.nome;
-  document.getElementById("input-link-jogador").value = `${location.origin}/jogador?id=${id}`;
+      async function buscarEstado() {
+        const resposta = await fetch(`/api/encontros/${id}`);
+        if (resposta.status === 404) {
+          document.body.innerHTML = `<p>Encontro não encontrado. <a href="/mestre">Voltar</a></p>`;
+          return false;
+        }
+        estado = await resposta.json();
+        return true;
+      }
 
-  async function salvarEstado() {
-    const resposta = await fetch(`/api/encontros/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(estado),
-    });
-    estado = await resposta.json();
-    renderizar();
-  }
+      if (!(await buscarEstado())) return;
 
-  function criaturasOrdenadas() {
-    return [...estado.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
-  }
+      document.getElementById("tela-combate").style.display = "block";
+      document.getElementById("titulo-encontro").textContent = estado.nome;
+      document.getElementById("input-link-jogador").value = `${location.origin}/jogador?id=${id}`;
 
-  function criarCheckboxesTipos(containerId) {
-    const container = document.getElementById(containerId);
-    for (const tipo of TIPOS_DANO) {
-      const label = document.createElement("label");
-      label.className = "checkbox-tipo";
-      label.innerHTML = `<input type="checkbox" value="${tipo.chave}"> ${tipo.label}`;
-      container.appendChild(label);
-    }
-  }
+      document.getElementById("btn-copiar-link").addEventListener("click", () => {
+        const input = document.getElementById("input-link-jogador");
+        navigator.clipboard.writeText(input.value).then(() => {
+          const btn = document.getElementById("btn-copiar-link");
+          btn.textContent = "Copiado!";
+          btn.classList.add("copiado");
+          setTimeout(() => {
+            btn.textContent = "Copiar";
+            btn.classList.remove("copiado");
+          }, 2000);
+        });
+      });
 
-  function tiposMarcados(containerId) {
-    return [...document.querySelectorAll(`#${containerId} input:checked`)].map((i) => i.value);
-  }
+      const estadoLocalUI = {};
 
-  criarCheckboxesTipos("checkboxes-resistencias");
-  criarCheckboxesTipos("checkboxes-imunidades");
+      async function salvarEstado() {
+        const resposta = await fetch(`/api/encontros/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(estado),
+        });
+        estado = await resposta.json();
+        renderizar();
+      }
 
-  document.getElementById("btn-toggle-resistencias").addEventListener("click", () => {
-    const secao = document.getElementById("secao-resistencias");
-    secao.style.display = secao.style.display === "none" ? "flex" : "none";
-  });
+      function criaturasOrdenadas() {
+        return [...estado.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
+      }
 
-  function criarCriaturaApartirDeJogador(jogador) {
-    return {
-      id: Date.now() + Math.random(),
-      nome: jogador.nome,
-      iniciativa: 0,
-      hpMaximo: jogador.hpMaximo,
-      hp: jogador.hpMaximo,
-    };
-  }
+      function criarCheckboxesTipos(containerId) {
+        const container = document.getElementById(containerId);
+        for (const tipo of TIPOS_DANO) {
+          const label = document.createElement("label");
+          label.className = "checkbox-tipo";
+          label.innerHTML = `<input type="checkbox" value="${tipo.chave}"> ${tipo.label}`;
+          container.appendChild(label);
+        }
+      }
 
-  async function adicionarCriaturas(novasCriaturas) {
-    await buscarEstado();
-    estado.criaturas.push(...novasCriaturas);
-    if (estado.turnoAtualId === null && estado.criaturas.length > 0) {
-      estado.turnoAtualId = estado.criaturas[0].id;
-    }
-    salvarEstado();
-  }
+      function tiposMarcados(containerId) {
+        return [...document.querySelectorAll(`#${containerId} input:checked`)].map((i) => i.value);
+      }
 
-  async function carregarJogadoresParaEncontro() {
-    const resposta = await fetch("/api/jogadores");
-    const jogadoresCadastrados = await resposta.json();
+      criarCheckboxesTipos("checkboxes-resistencias");
+      criarCheckboxesTipos("checkboxes-imunidades");
 
-    const lista = document.getElementById("lista-jogadores-encontro");
-    const vazio = document.getElementById("vazio-jogadores-encontro");
-    lista.innerHTML = "";
-    vazio.style.display = jogadoresCadastrados.length === 0 ? "block" : "none";
+      document.getElementById("btn-toggle-resistencias").addEventListener("click", () => {
+        const secao = document.getElementById("secao-resistencias");
+        secao.style.display = secao.style.display === "none" ? "flex" : "none";
+      });
 
-    for (const jogador of jogadoresCadastrados) {
-      const item = document.createElement("li");
-      item.innerHTML = `
+      function criarCriaturaApartirDeJogador(jogador) {
+        return {
+          id: Date.now() + Math.random(),
+          nome: jogador.nome,
+          iniciativa: 0,
+          hpMaximo: jogador.hpMaximo,
+          hp: jogador.hpMaximo,
+        };
+      }
+
+      async function adicionarCriaturas(novasCriaturas) {
+        await buscarEstado();
+        estado.criaturas.push(...novasCriaturas);
+        if (estado.turnoAtualId === null && estado.criaturas.length > 0) {
+          estado.turnoAtualId = estado.criaturas[0].id;
+        }
+        salvarEstado();
+      }
+
+      async function carregarJogadoresParaEncontro() {
+        const resposta = await fetch("/api/jogadores");
+        const jogadoresCadastrados = await resposta.json();
+
+        const lista = document.getElementById("lista-jogadores-encontro");
+        const vazio = document.getElementById("vazio-jogadores-encontro");
+        lista.innerHTML = "";
+        vazio.style.display = jogadoresCadastrados.length === 0 ? "block" : "none";
+
+        for (const jogador of jogadoresCadastrados) {
+          const item = document.createElement("li");
+          item.innerHTML = `
         <span>${jogador.nome} (HP ${jogador.hpMaximo})</span>
         <button class="btn-add">Adicionar</button>
       `;
-      item.querySelector("button").addEventListener("click", () => {
-        adicionarCriaturas([criarCriaturaApartirDeJogador(jogador)]);
-      });
-      lista.appendChild(item);
-    }
+          item.querySelector("button").addEventListener("click", () => {
+            adicionarCriaturas([criarCriaturaApartirDeJogador(jogador)]);
+          });
+          lista.appendChild(item);
+        }
 
-    document.getElementById("btn-adicionar-todos-jogadores").addEventListener("click", () => {
-      adicionarCriaturas(jogadoresCadastrados.map(criarCriaturaApartirDeJogador));
-    });
-  }
+        document.getElementById("btn-adicionar-todos-jogadores").addEventListener("click", () => {
+          adicionarCriaturas(jogadoresCadastrados.map(criarCriaturaApartirDeJogador));
+        });
+      }
 
-  function renderizar() {
-    const lista = document.getElementById("lista");
-    const vazio = document.getElementById("vazio");
-    const ordenadas = criaturasOrdenadas();
+      function renderizar() {
+        const lista = document.getElementById("lista");
+        const vazio = document.getElementById("vazio");
+        const ordenadas = criaturasOrdenadas();
 
-    document.getElementById("rodada").textContent = estado.rodada;
-    lista.innerHTML = "";
-    vazio.style.display = ordenadas.length === 0 ? "block" : "none";
+        document.getElementById("rodada").textContent = estado.rodada;
+        lista.innerHTML = "";
+        vazio.style.display = ordenadas.length === 0 ? "block" : "none";
 
-    const indiceAtual = ordenadas.findIndex((c) => c.id === estado.turnoAtualId);
-    const indiceProximo = ordenadas.length === 0 ? -1 : indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
-    const criaturaProxima = indiceProximo === -1 ? null : ordenadas[indiceProximo];
+        const indiceAtual = ordenadas.findIndex((c) => c.id === estado.turnoAtualId);
+        const indiceProximo = ordenadas.length === 0 ? -1 : indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
+        const criaturaProxima = indiceProximo === -1 ? null : ordenadas[indiceProximo];
 
-    for (const criatura of ordenadas) {
-      const morta = criatura.hp <= 0;
-      const ehAtual = criatura.id === estado.turnoAtualId;
-      const ehProxima = !ehAtual && criaturaProxima && criatura.id === criaturaProxima.id;
-      const item = document.createElement("li");
-      item.dataset.id = criatura.id;
-      item.className = [
-        ehAtual ? "turno-atual" : "",
-        ehProxima ? "proximo-turno" : "",
-        morta ? "morta" : "",
-      ].join(" ");
-      item.innerHTML = `
+        for (const criatura of ordenadas) {
+          const morta = criatura.hp <= 0;
+          const ehAtual = criatura.id === estado.turnoAtualId;
+          const ehProxima = !ehAtual && criaturaProxima && criatura.id === criaturaProxima.id;
+          const item = document.createElement("li");
+          item.dataset.id = criatura.id;
+          item.className = [
+            ehAtual ? "turno-atual" : "",
+            ehProxima ? "proximo-turno" : "",
+            morta ? "morta" : "",
+          ].join(" ");
+          item.innerHTML = `
         <div class="linha-topo">
           <span class="nome">${criatura.nome}</span>
           ${morta ? '<span class="morta">☠ Morta</span>' : ""}
@@ -517,8 +639,8 @@ async function iniciarTelaCombate(id) {
         <div class="hp">HP: ${criatura.hp} / ${criatura.hpMaximo}</div>
         ${criatura.resistencias?.length || criatura.imunidades?.length ? `
         <div class="info-tipos">
-          ${criatura.resistencias?.length ? `Resistência: ${criatura.resistencias.map(labelTipoDano).join(", ")}` : ""}
-          ${criatura.imunidades?.length ? `Imunidade: ${criatura.imunidades.map(labelTipoDano).join(", ")}` : ""}
+          ${criatura.resistencias?.length ? `<div><strong>Resistência:</strong> ${criatura.resistencias.map(labelTipoDano).join(", ")}</div>` : ""}
+          ${criatura.imunidades?.length ? `<div><strong>Imunidade:</strong> ${criatura.imunidades.map(labelTipoDano).join(", ")}</div>` : ""}
         </div>` : ""}
         <div class="acoes">
           <select class="select-tipo-dano">
@@ -532,97 +654,122 @@ async function iniciarTelaCombate(id) {
         </div>
       `;
 
-      const inputValor = item.querySelector(".input-valor");
+          const inputValor = item.querySelector(".input-valor");
+          const selectTipo = item.querySelector(".select-tipo-dano");
 
-      item.querySelector(".btn-dano").addEventListener("click", () => {
-        const valor = Number(inputValor.value) || 0;
-        const tipo = item.querySelector(".select-tipo-dano").value;
-        criatura.hp = Math.max(0, criatura.hp - calcularDano(criatura, valor, tipo));
-        inputValor.value = "";
-        salvarEstado();
-      });
+          if (estadoLocalUI[criatura.id]) {
+            if (estadoLocalUI[criatura.id].valor !== undefined) inputValor.value = estadoLocalUI[criatura.id].valor;
+            if (estadoLocalUI[criatura.id].tipo !== undefined) selectTipo.value = estadoLocalUI[criatura.id].tipo;
+          }
 
-      item.querySelector(".btn-cura").addEventListener("click", () => {
-        const valor = Number(inputValor.value) || 0;
-        criatura.hp = Math.min(criatura.hpMaximo, criatura.hp + valor);
-        inputValor.value = "";
-        salvarEstado();
-      });
+          inputValor.addEventListener("input", (e) => {
+            estadoLocalUI[criatura.id] = estadoLocalUI[criatura.id] || {};
+            estadoLocalUI[criatura.id].valor = e.target.value;
+          });
+          selectTipo.addEventListener("change", (e) => {
+            estadoLocalUI[criatura.id] = estadoLocalUI[criatura.id] || {};
+            estadoLocalUI[criatura.id].tipo = e.target.value;
+          });
 
-      item.querySelector(".btn-remover").addEventListener("click", () => {
-        estado.criaturas = estado.criaturas.filter((c) => c.id !== criatura.id);
-        if (estado.turnoAtualId === criatura.id) estado.turnoAtualId = null;
-        salvarEstado();
-      });
+          item.querySelector(".btn-dano").addEventListener("click", () => {
+            const valor = Number(inputValor.value) || 0;
+            const tipo = selectTipo.value;
+            criatura.hp = Math.max(0, criatura.hp - calcularDano(criatura, valor, tipo));
+            inputValor.value = "";
+            if (estadoLocalUI[criatura.id]) estadoLocalUI[criatura.id].valor = "";
+            salvarEstado();
+          });
 
-      lista.appendChild(item);
-    }
-  }
+          item.querySelector(".btn-cura").addEventListener("click", () => {
+            const valor = Number(inputValor.value) || 0;
+            criatura.hp = Math.min(criatura.hpMaximo, criatura.hp + valor);
+            inputValor.value = "";
+            if (estadoLocalUI[criatura.id]) estadoLocalUI[criatura.id].valor = "";
+            salvarEstado();
+          });
 
-  document.getElementById("form-adicionar").addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    const nomeInput = document.getElementById("input-nome");
-    const hpInput = document.getElementById("input-hp");
+          item.querySelector(".btn-remover").addEventListener("click", () => {
+            estado.criaturas = estado.criaturas.filter((c) => c.id !== criatura.id);
+            if (estado.turnoAtualId === criatura.id) estado.turnoAtualId = null;
+            salvarEstado();
+          });
 
-    const hpMaximo = Number(hpInput.value);
-    const nova = {
-      id: Date.now() + Math.random(),
-      nome: nomeInput.value.trim(),
-      iniciativa: 0,
-      hpMaximo,
-      hp: hpMaximo,
-      resistencias: tiposMarcados("checkboxes-resistencias"),
-      imunidades: tiposMarcados("checkboxes-imunidades"),
-    };
-
-    await buscarEstado();
-    estado.criaturas.push(nova);
-
-    if (estado.turnoAtualId === null) estado.turnoAtualId = nova.id;
-
-    nomeInput.value = "";
-    hpInput.value = "";
-    document.querySelectorAll("#secao-resistencias input:checked").forEach((i) => (i.checked = false));
-    document.getElementById("secao-resistencias").style.display = "none";
-    nomeInput.focus();
-
-    salvarEstado();
-  });
-
-  document.getElementById("btn-proximo").addEventListener("click", () => {
-    const ordenadas = criaturasOrdenadas();
-    if (ordenadas.length === 0) return;
-
-    const indiceAtual = ordenadas.findIndex((c) => c.id === estado.turnoAtualId);
-    const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
-
-    if (proximoIndice === 0) estado.rodada += 1;
-    estado.turnoAtualId = ordenadas[proximoIndice].id;
-
-    salvarEstado();
-  });
-
-  renderizar();
-  carregarJogadoresParaEncontro();
-
-  setInterval(async () => {
-    const elementoFocado = document.activeElement;
-    const editandoValor = elementoFocado && elementoFocado.classList.contains("input-valor")
-      ? { id: elementoFocado.closest("li").dataset.id, valor: elementoFocado.value }
-      : null;
-
-    if (!(await buscarEstado())) return;
-    renderizar();
-
-    if (editandoValor) {
-      const inputRestaurado = document.querySelector(`li[data-id="${editandoValor.id}"] .input-valor`);
-      if (inputRestaurado) {
-        inputRestaurado.value = editandoValor.valor;
-        inputRestaurado.focus();
+          lista.appendChild(item);
+        }
       }
+
+      document.getElementById("form-adicionar").addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const nomeInput = document.getElementById("input-nome");
+        const hpInput = document.getElementById("input-hp");
+
+        const hpMaximo = Number(hpInput.value);
+        const nova = {
+          id: Date.now() + Math.random(),
+          nome: nomeInput.value.trim(),
+          iniciativa: 0,
+          hpMaximo,
+          hp: hpMaximo,
+          resistencias: tiposMarcados("checkboxes-resistencias"),
+          imunidades: tiposMarcados("checkboxes-imunidades"),
+        };
+
+        await buscarEstado();
+        estado.criaturas.push(nova);
+
+        if (estado.turnoAtualId === null) estado.turnoAtualId = nova.id;
+
+        const checkboxSalvar = document.getElementById("checkbox-salvar-global");
+        if (checkboxSalvar.checked) {
+          await fetch("/api/jogadores", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nome: nova.nome,
+              hpMaximo: nova.hpMaximo,
+              resistencias: nova.resistencias,
+              imunidades: nova.imunidades
+            }),
+          });
+          carregarJogadoresParaEncontro();
+        }
+
+        nomeInput.value = "";
+        hpInput.value = "";
+        checkboxSalvar.checked = false;
+        document.querySelectorAll("#secao-resistencias input:checked").forEach((i) => (i.checked = false));
+        document.getElementById("secao-resistencias").style.display = "none";
+        nomeInput.focus();
+
+        salvarEstado();
+      });
+
+      document.getElementById("btn-proximo").addEventListener("click", () => {
+        const ordenadas = criaturasOrdenadas();
+        if (ordenadas.length === 0) return;
+
+        const indiceAtual = ordenadas.findIndex((c) => c.id === estado.turnoAtualId);
+        const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
+
+        if (proximoIndice === 0) estado.rodada += 1;
+        estado.turnoAtualId = ordenadas[proximoIndice].id;
+
+        salvarEstado();
+      });
+
+      renderizar();
+      carregarJogadoresParaEncontro();
+
+      setInterval(async () => {
+        if (!(await buscarEstado())) return;
+
+        const editando = document.activeElement && document.activeElement.closest("#lista");
+        if (!editando) {
+          renderizar();
+        }
+      }, 2000);
     }
-  }, 2000);
-}
-</script>
+  </script>
 </body>
+
 </html>
