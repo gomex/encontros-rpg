@@ -97,9 +97,14 @@ const servidor = http.createServer(async (req, res) => {
 
   if (url.pathname === "/api/jogadores" && req.method === "POST") {
     const corpo = await lerCorpo(req);
-    const { nome, hpMaximo } = JSON.parse(corpo);
+    const { nome, hpMaximo, resistencias, imunidades } = JSON.parse(corpo);
     const id = gerarId(jogadores);
-    jogadores[id] = { nome: nome || "Jogador sem nome", hpMaximo: Number(hpMaximo) || 0 };
+    jogadores[id] = {
+      nome: nome || "Jogador sem nome",
+      hpMaximo: Number(hpMaximo) || 0,
+      resistencias: resistencias || [],
+      imunidades: imunidades || []
+    };
     salvarJogadores();
     return enviarJson(res, { id, ...jogadores[id] });
   }
@@ -158,6 +163,6 @@ function listarIpsLocais() {
 servidor.listen(PORTA, () => {
   console.log(`Mestre:   http://localhost:${PORTA}/mestre`);
   for (const ip of listarIpsLocais()) {
-    console.log(`Jogadores (mesma rede Wi-Fi): http://${ip}:${PORTA}/jogador?id=...`);
+    console.log(`Jogadores (mesma rede Wi-Fi): http://localhost:${PORTA}/jogador?id=...`);
   }
 });
