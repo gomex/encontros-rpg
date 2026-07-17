@@ -1,221 +1,274 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Iniciativa</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, system-ui, sans-serif;
-    background: #1b1b1f;
-    color: #f0f0f0;
-    padding: 12px;
-    padding-bottom: 80px;
-  }
-  h1 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
-  }
-  .rodada {
-    font-size: 0.95rem;
-    color: #aaa;
-    margin-bottom: 12px;
-  }
-  input {
-    background: #2a2a30;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1rem;
-  }
-  button {
-    border: none;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  .btn-dano { background: #b3413d; color: #fff; }
-  .btn-cura { background: #3d9c56; color: #fff; }
-  .btn-iniciativa { background: #3a6df0; color: #fff; }
-  ul { list-style: none; margin: 0; padding: 0; }
-  li {
-    background: #26262c;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-  }
-  li.turno-atual {
-    border-color: #f0c34a;
-    background: #33302066;
-  }
-  li.proximo-turno {
-    border-style: dashed;
-    border-color: #6ea0ff;
-  }
-  .tag-proxima {
-    color: #6ea0ff;
-    font-size: 0.8rem;
-    margin-left: 8px;
-  }
-  .turno-agora {
-    font-size: 1.05rem;
-    font-weight: bold;
-    color: #f0c34a;
-    margin-bottom: 4px;
-  }
-  .btn-terminar {
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    background: #3a6df0;
-    color: #fff;
-    padding: 14px;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  .linha-topo {
-    margin-bottom: 8px;
-  }
-  .nome {
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-  .info {
-    font-size: 0.85rem;
-    color: #aaa;
-  }
-  .acoes {
-    display: flex;
-    gap: 6px;
-    margin-top: 6px;
-  }
-  .acoes input {
-    width: 70px;
-    flex: 0 0 auto;
-  }
-  .acoes select {
-    flex: 1 1 100px;
-  }
-  .acoes button { flex: 1 1 auto; }
-  select {
-    background: #2a2a30;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1rem;
-  }
-  .morta {
-    color: #e05a5a;
-    font-size: 0.8rem;
-    margin-left: 8px;
-  }
-  li.morta .nome {
-    text-decoration: line-through;
-    opacity: 0.6;
-  }
-  .vazio, .mensagem {
-    color: #777;
-    text-align: center;
-    margin-top: 24px;
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Iniciativa</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, system-ui, sans-serif;
+      background: #1b1b1f;
+      color: #f0f0f0;
+      padding: 12px;
+      padding-bottom: 80px;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 4px;
+    }
+
+    .rodada {
+      font-size: 0.95rem;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    input {
+      background: #2a2a30;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .btn-dano {
+      background: #b3413d;
+      color: #fff;
+    }
+
+    .btn-cura {
+      background: #3d9c56;
+      color: #fff;
+    }
+
+    .btn-iniciativa {
+      background: #3a6df0;
+      color: #fff;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      background: #26262c;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    li.turno-atual {
+      border-color: #f0c34a;
+      background: #33302066;
+    }
+
+    li.proximo-turno {
+      border-style: dashed;
+      border-color: #6ea0ff;
+    }
+
+    .tag-proxima {
+      color: #6ea0ff;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    .turno-agora {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #f0c34a;
+      margin-bottom: 4px;
+    }
+
+    .btn-terminar {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: #3a6df0;
+      color: #fff;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .linha-topo {
+      margin-bottom: 8px;
+    }
+
+    .nome {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .info {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .acoes {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .acoes input {
+      width: 80px;
+      flex: 0 0 auto;
+      padding: 14px 10px;
+      font-size: 1.1rem;
+    }
+
+    .acoes select {
+      flex: 1 1 100px;
+    }
+
+    .acoes button {
+      flex: 1 1 auto;
+      padding: 14px 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    select {
+      background: #2a2a30;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 8px;
+      padding: 14px 10px;
+      font-size: 1.1rem;
+    }
+
+    .morta {
+      color: #e05a5a;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    li.morta .nome {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .vazio,
+    .mensagem {
+      color: #777;
+      text-align: center;
+      margin-top: 24px;
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="mensagem" class="mensagem" style="display:none"></div>
+  <div id="mensagem" class="mensagem" style="display:none"></div>
 
-<div id="tela-encontro" style="display:none">
-  <h1 id="titulo-encontro">Ordem de Iniciativa</h1>
-  <div class="rodada">Rodada <span id="rodada">1</span></div>
-  <div class="turno-agora">Vez de: <span id="nome-turno-atual">-</span></div>
-  <ul id="lista"></ul>
-  <div class="vazio" id="vazio" style="display:none">Aguardando o mestre iniciar o combate...</div>
-  <button class="btn-terminar" id="btn-terminar">Terminei a ação &rarr;</button>
-</div>
+  <div id="tela-encontro" style="display:none">
+    <h1 id="titulo-encontro">Ordem de Iniciativa</h1>
+    <div class="rodada">Rodada <span id="rodada">1</span></div>
+    <div class="turno-agora">Vez de: <span id="nome-turno-atual">-</span></div>
+    <ul id="lista"></ul>
+    <div class="vazio" id="vazio" style="display:none">Aguardando o mestre iniciar o combate...</div>
+    <button class="btn-terminar" id="btn-terminar">Terminei a ação &rarr;</button>
+  </div>
 
-<script>
-const params = new URLSearchParams(location.search);
-const idEncontro = params.get("id");
+  <script>
+    const params = new URLSearchParams(location.search);
+    const idEncontro = params.get("id");
 
-const TIPOS_DANO = [
-  { chave: "acido", label: "Ácido" },
-  { chave: "contundente", label: "Contundente" },
-  { chave: "cortante", label: "Cortante" },
-  { chave: "perfurante", label: "Perfurante" },
-  { chave: "fogo", label: "Fogo" },
-  { chave: "frio", label: "Frio" },
-  { chave: "forca", label: "Força" },
-  { chave: "necrotico", label: "Necrótico" },
-  { chave: "veneno", label: "Veneno" },
-  { chave: "psiquico", label: "Psíquico" },
-  { chave: "radiante", label: "Radiante" },
-  { chave: "relampago", label: "Relâmpago" },
-  { chave: "trovao", label: "Trovão" },
-];
+    const TIPOS_DANO = [
+      { chave: "acido", label: "Ácido" },
+      { chave: "contundente", label: "Contundente" },
+      { chave: "cortante", label: "Cortante" },
+      { chave: "perfurante", label: "Perfurante" },
+      { chave: "fogo", label: "Fogo" },
+      { chave: "frio", label: "Frio" },
+      { chave: "forca", label: "Força" },
+      { chave: "necrotico", label: "Necrótico" },
+      { chave: "veneno", label: "Veneno" },
+      { chave: "psiquico", label: "Psíquico" },
+      { chave: "radiante", label: "Radiante" },
+      { chave: "relampago", label: "Relâmpago" },
+      { chave: "trovao", label: "Trovão" },
+    ];
 
-function calcularDano(criatura, valor, tipo) {
-  if (!tipo) return valor;
-  if ((criatura.imunidades || []).includes(tipo)) return 0;
-  if ((criatura.resistencias || []).includes(tipo)) return Math.floor(valor / 2);
-  return valor;
-}
+    function calcularDano(criatura, valor, tipo) {
+      if (!tipo) return valor;
+      if ((criatura.imunidades || []).includes(tipo)) return 0;
+      if ((criatura.resistencias || []).includes(tipo)) return Math.floor(valor / 2);
+      return valor;
+    }
 
-let estadoAtual = null;
+    let estadoAtual = null;
+    const estadoLocalUI = {};
 
-function mostrarMensagem(texto) {
-  document.getElementById("tela-encontro").style.display = "none";
-  const mensagem = document.getElementById("mensagem");
-  mensagem.textContent = texto;
-  mensagem.style.display = "block";
-}
+    function mostrarMensagem(texto) {
+      document.getElementById("tela-encontro").style.display = "none";
+      const mensagem = document.getElementById("mensagem");
+      mensagem.textContent = texto;
+      mensagem.style.display = "block";
+    }
 
-async function salvarEstado() {
-  const resposta = await fetch(`/api/encontros/${idEncontro}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(estadoAtual),
-  });
-  estadoAtual = await resposta.json();
-  renderizar();
-}
+    async function salvarEstado() {
+      const resposta = await fetch(`/api/encontros/${idEncontro}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(estadoAtual),
+      });
+      estadoAtual = await resposta.json();
+      renderizar();
+    }
 
-function renderizar() {
-  document.getElementById("titulo-encontro").textContent = estadoAtual.nome;
+    function renderizar() {
+      document.getElementById("titulo-encontro").textContent = estadoAtual.nome;
 
-  const lista = document.getElementById("lista");
-  const vazio = document.getElementById("vazio");
-  const ordenadas = [...estadoAtual.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
+      const lista = document.getElementById("lista");
+      const vazio = document.getElementById("vazio");
+      const ordenadas = [...estadoAtual.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
 
-  document.getElementById("rodada").textContent = estadoAtual.rodada;
-  lista.innerHTML = "";
-  vazio.style.display = ordenadas.length === 0 ? "block" : "none";
+      document.getElementById("rodada").textContent = estadoAtual.rodada;
+      lista.innerHTML = "";
+      vazio.style.display = ordenadas.length === 0 ? "block" : "none";
 
-  const indiceAtual = ordenadas.findIndex((c) => c.id === estadoAtual.turnoAtualId);
-  const criaturaAtual = indiceAtual !== -1 ? ordenadas[indiceAtual] : null;
-  const indiceProximo = ordenadas.length === 0 ? -1 : indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
-  const criaturaProxima = indiceProximo === -1 ? null : ordenadas[indiceProximo];
+      const indiceAtual = ordenadas.findIndex((c) => c.id === estadoAtual.turnoAtualId);
+      const criaturaAtual = indiceAtual !== -1 ? ordenadas[indiceAtual] : null;
+      const indiceProximo = ordenadas.length === 0 ? -1 : indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
+      const criaturaProxima = indiceProximo === -1 ? null : ordenadas[indiceProximo];
 
-  document.getElementById("nome-turno-atual").textContent = criaturaAtual ? criaturaAtual.nome : "-";
+      document.getElementById("nome-turno-atual").textContent = criaturaAtual ? criaturaAtual.nome : "-";
 
-  for (const criatura of ordenadas) {
-    const morta = criatura.hp <= 0;
-    const danoCausado = criatura.hpMaximo - criatura.hp;
-    const ehAtual = criatura.id === estadoAtual.turnoAtualId;
-    const ehProxima = !ehAtual && criaturaProxima && criatura.id === criaturaProxima.id;
-    const item = document.createElement("li");
-    item.className = [
-      ehAtual ? "turno-atual" : "",
-      ehProxima ? "proximo-turno" : "",
-      morta ? "morta" : "",
-    ].join(" ");
-    item.innerHTML = `
+      for (const criatura of ordenadas) {
+        const morta = criatura.hp <= 0;
+        const danoCausado = criatura.hpMaximo - criatura.hp;
+        const ehAtual = criatura.id === estadoAtual.turnoAtualId;
+        const ehProxima = !ehAtual && criaturaProxima && criatura.id === criaturaProxima.id;
+        const item = document.createElement("li");
+        item.dataset.id = criatura.id;
+        item.className = [
+          ehAtual ? "turno-atual" : "",
+          ehProxima ? "proximo-turno" : "",
+          morta ? "morta" : "",
+        ].join(" ");
+        item.innerHTML = `
       <div class="linha-topo">
         <span class="nome">${criatura.nome}</span>
         ${morta ? '<span class="morta">☠ Morta</span>' : ""}
@@ -229,91 +282,109 @@ function renderizar() {
       <div class="acoes">
         <select class="select-tipo-dano">
           <option value="">Sem tipo</option>
-          ${TIPOS_DANO.map((t) => `<option value="${t.chave}" ${t.chave === "cortante" ? "selected" : ""}>${t.label}</option>`).join("")}
+          ${TIPOS_DANO.map((t) => `<option value="${t.chave}">${t.label}</option>`).join("")}
         </select>
         <input type="number" class="input-valor" placeholder="0" min="0">
-        <button class="btn-dano">+</button>
-        <button class="btn-cura">-</button>
+        <button class="btn-dano">Dano</button>
+        <button class="btn-cura">Cura</button>
       </div>
     `;
 
-    function buscarAtual() {
-      return estadoAtual.criaturas.find((c) => c.id === criatura.id);
-    }
+        function buscarAtual() {
+          return estadoAtual.criaturas.find((c) => c.id === criatura.id);
+        }
 
-    item.querySelector(".btn-iniciativa").addEventListener("click", () => {
-      const inputIniciativa = item.querySelector(".input-iniciativa");
-      const atual = buscarAtual();
-      atual.iniciativa = Number(inputIniciativa.value) || 0;
+        const inputValor = item.querySelector(".input-valor");
+        const selectTipo = item.querySelector(".select-tipo-dano");
 
-      const criaturaEmAcao = estadoAtual.criaturas.find((c) => c.id === estadoAtual.turnoAtualId);
-      if (criaturaEmAcao && atual.id !== criaturaEmAcao.id && atual.hp > 0 && atual.iniciativa > criaturaEmAcao.iniciativa) {
-        estadoAtual.turnoAtualId = atual.id;
+        if (estadoLocalUI[criatura.id]) {
+          if (estadoLocalUI[criatura.id].valor !== undefined) inputValor.value = estadoLocalUI[criatura.id].valor;
+          if (estadoLocalUI[criatura.id].tipo !== undefined) selectTipo.value = estadoLocalUI[criatura.id].tipo;
+        }
+
+        inputValor.addEventListener("input", (e) => {
+          estadoLocalUI[criatura.id] = estadoLocalUI[criatura.id] || {};
+          estadoLocalUI[criatura.id].valor = e.target.value;
+        });
+        selectTipo.addEventListener("change", (e) => {
+          estadoLocalUI[criatura.id] = estadoLocalUI[criatura.id] || {};
+          estadoLocalUI[criatura.id].tipo = e.target.value;
+        });
+
+        item.querySelector(".btn-iniciativa").addEventListener("click", () => {
+          const inputIniciativa = item.querySelector(".input-iniciativa");
+          const atual = buscarAtual();
+          atual.iniciativa = Number(inputIniciativa.value) || 0;
+
+          const criaturaEmAcao = estadoAtual.criaturas.find((c) => c.id === estadoAtual.turnoAtualId);
+          if (criaturaEmAcao && atual.id !== criaturaEmAcao.id && atual.hp > 0 && atual.iniciativa > criaturaEmAcao.iniciativa) {
+            estadoAtual.turnoAtualId = atual.id;
+          }
+
+          salvarEstado();
+        });
+
+        item.querySelector(".btn-dano").addEventListener("click", () => {
+          const valor = Number(inputValor.value) || 0;
+          const tipo = selectTipo.value;
+          const atual = buscarAtual();
+          atual.hp = Math.max(0, atual.hp - calcularDano(atual, valor, tipo));
+          inputValor.value = "";
+          if (estadoLocalUI[criatura.id]) estadoLocalUI[criatura.id].valor = "";
+          salvarEstado();
+        });
+
+        item.querySelector(".btn-cura").addEventListener("click", () => {
+          const valor = Number(inputValor.value) || 0;
+          const atual = buscarAtual();
+          atual.hp = Math.min(atual.hpMaximo, atual.hp + valor);
+          inputValor.value = "";
+          if (estadoLocalUI[criatura.id]) estadoLocalUI[criatura.id].valor = "";
+          salvarEstado();
+        });
+
+        lista.appendChild(item);
       }
-
-      salvarEstado();
-    });
-
-    const inputValor = item.querySelector(".input-valor");
-
-    item.querySelector(".btn-dano").addEventListener("click", () => {
-      const valor = Number(inputValor.value) || 0;
-      const tipo = item.querySelector(".select-tipo-dano").value;
-      const atual = buscarAtual();
-      atual.hp = Math.max(0, atual.hp - calcularDano(atual, valor, tipo));
-      inputValor.value = "";
-      salvarEstado();
-    });
-
-    item.querySelector(".btn-cura").addEventListener("click", () => {
-      const valor = Number(inputValor.value) || 0;
-      const atual = buscarAtual();
-      atual.hp = Math.min(atual.hpMaximo, atual.hp + valor);
-      inputValor.value = "";
-      salvarEstado();
-    });
-
-    lista.appendChild(item);
-  }
-}
-
-async function atualizar() {
-  try {
-    const resposta = await fetch(`/api/encontros/${idEncontro}`);
-    if (resposta.status === 404) {
-      mostrarMensagem("Encontro não encontrado.");
-      return;
     }
-    estadoAtual = await resposta.json();
-    document.getElementById("tela-encontro").style.display = "block";
-    document.getElementById("mensagem").style.display = "none";
 
-    const editando = document.activeElement && document.activeElement.closest("#lista");
-    if (!editando) renderizar();
-  } catch (erro) {
-    // rede instável — tenta novamente no próximo intervalo
-  }
-}
+    async function atualizar() {
+      try {
+        const resposta = await fetch(`/api/encontros/${idEncontro}`);
+        if (resposta.status === 404) {
+          mostrarMensagem("Encontro não encontrado.");
+          return;
+        }
+        estadoAtual = await resposta.json();
+        document.getElementById("tela-encontro").style.display = "block";
+        document.getElementById("mensagem").style.display = "none";
 
-document.getElementById("btn-terminar").addEventListener("click", () => {
-  const ordenadas = [...estadoAtual.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
-  if (ordenadas.length === 0) return;
+        const editando = document.activeElement && document.activeElement.closest("#lista");
+        if (!editando) renderizar();
+      } catch (erro) {
+        // rede instável — tenta novamente no próximo intervalo
+      }
+    }
 
-  const indiceAtual = ordenadas.findIndex((c) => c.id === estadoAtual.turnoAtualId);
-  const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
+    document.getElementById("btn-terminar").addEventListener("click", () => {
+      const ordenadas = [...estadoAtual.criaturas].sort((a, b) => b.iniciativa - a.iniciativa);
+      if (ordenadas.length === 0) return;
 
-  if (proximoIndice === 0) estadoAtual.rodada += 1;
-  estadoAtual.turnoAtualId = ordenadas[proximoIndice].id;
+      const indiceAtual = ordenadas.findIndex((c) => c.id === estadoAtual.turnoAtualId);
+      const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % ordenadas.length;
 
-  salvarEstado();
-});
+      if (proximoIndice === 0) estadoAtual.rodada += 1;
+      estadoAtual.turnoAtualId = ordenadas[proximoIndice].id;
 
-if (!idEncontro) {
-  mostrarMensagem("Link inválido. Peça o link correto ao mestre.");
-} else {
-  atualizar();
-  setInterval(atualizar, 2000);
-}
-</script>
+      salvarEstado();
+    });
+
+    if (!idEncontro) {
+      mostrarMensagem("Link inválido. Peça o link correto ao mestre.");
+    } else {
+      atualizar();
+      setInterval(atualizar, 2000);
+    }
+  </script>
 </body>
+
 </html>
